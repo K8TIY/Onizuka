@@ -1,2 +1,4 @@
-Demo App/OnizukaTester.xcodeproj/moseshll.pbxuser
-Demo App/OnizukaTester.xcodeproj/moseshll.mode1v3
+*.mode1v3
+*.mode2v3
+*.pbxuser
+build
