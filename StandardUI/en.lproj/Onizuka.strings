@@ -1,0 +1,40 @@
+// Menus
+"__ABOUT__" = "About __APPNAME__...";
+"__PREFS__" = "Preferences...";
+"__SERVICES__" = "Services";
+"__HIDE__" = "Hide __APPNAME__";
+"__HIDE_OTHERS__" = "Hide Others";
+"__SHOW_ALL__" = "Show All";
+"__QUIT__" = "Quit __APPNAME__";
+
+"__FILE__" = "File";
+"__NEW__" = "New";
+"__OPEN__" = "Open...";
+"__OPEN_RECENT__" = "Open Recent";
+"__CLEAR_MENU__" = "Clear Menu";
+"__CLOSE__" = "Close";
+"__SAVE__" = "Save";
+"__SAVE_AS__" = "Save As...";
+"__REVERT__" = "Revert";
+"__PAGE_SETUP__" = "Page Setup...";
+"__PRINT__" = "Print...";
+
+"__EDIT__" = "Edit";
+"__UNDO__" = "Undo";
+"__REDO__" = "Redo";
+"__CUT__" = "Cut";
+"__COPY__" = "Copy";
+"__PASTE__" = "Paste";
+"__DELETE__" = "Delete";
+"__SELECT_ALL__" = "Select All";
+
+"__WINDOW__" = "Window";
+"__MINIMIZE__" = "Minimize";
+"__ZOOM__" = "Zoom";
+"__BRING_ALL_TO_FRONT__" = "Bring All to Front";
+
+"__HELP__" = "Help";
+"__HELP_ITEM__" = "__APPNAME__ Help";
+
+// Standard
+"__OK__" = "OK";
