@@ -164,13 +164,16 @@ static const char* gRegexString = "__[A-Z]+(_[A-Z]+)*__";
   NSTextStorage* ts = [tv textStorage];
   NSString* str = [ts string];
   NSString* localized = [self copyLocalizedTitle:str];
-  NSRange range = NSMakeRange(0, 1);
-  NSDictionary* attrs = [ts attributesAtIndex:0 effectiveRange:&range];
-  range.length = [str length];
-  NSAttributedString* attrStr = [[NSAttributedString alloc] initWithString:localized attributes:attrs];
-  [localized release];
-  [ts replaceCharactersInRange:range withAttributedString:attrStr];
-  [attrStr release];
+  if (localized)
+  {
+    NSRange range = NSMakeRange(0, 1);
+    NSDictionary* attrs = [ts attributesAtIndex:0 effectiveRange:&range];
+    range.length = [str length];
+    NSAttributedString* attrStr = [[NSAttributedString alloc] initWithString:localized attributes:attrs];
+    [localized release];
+    [ts replaceCharactersInRange:range withAttributedString:attrStr];
+    [attrStr release];
+  }
 }
 
 -(void)localizeTableView:(NSTableView*)item
