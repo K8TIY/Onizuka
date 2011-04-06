@@ -16,17 +16,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #import <Cocoa/Cocoa.h>
 #include <regex.h>
 
-#ifndef NSINTEGER_DEFINED
-#if __LP64__ || NS_BUILD_32_LIKE_64
-typedef long NSInteger;
-typedef unsigned long NSUInteger;
-#else
-typedef int NSInteger;
-typedef unsigned int NSUInteger;
-#endif
-#define NSINTEGER_DEFINED 1
-#endif
-
 @interface Onizuka : NSObject
 {
   NSString*  _appName;    // Used for menu items like "About MyApp...".

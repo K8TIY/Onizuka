@@ -213,9 +213,9 @@ static const char* gRegexString = "__[A-Z]+(_[A-Z]+)*__";
 
 -(void)localizeMatrix:(NSMatrix*)matrix
 {
-  NSUInteger i = 0, j = 0;
-  NSUInteger rows = [matrix numberOfRows];
-  NSUInteger cols = [matrix numberOfColumns];
+  unsigned i = 0, j = 0;
+  unsigned rows = [matrix numberOfRows];
+  unsigned cols = [matrix numberOfColumns];
   for (i = 0; i < rows; i++)
   {
     for (j = 0; j < cols; j++)
@@ -228,7 +228,7 @@ static const char* gRegexString = "__[A-Z]+(_[A-Z]+)*__";
 
 -(void)localizeSegmentedControl:(NSSegmentedControl*)item
 {
-  NSInteger i, nsegs = [item segmentCount];
+  unsigned i, nsegs = [item segmentCount];
   NSSegmentedCell* cell = [item cell];
   for (i = 0; i < nsegs; i++)
   {
@@ -284,7 +284,7 @@ static const char* gRegexString = "__[A-Z]+(_[A-Z]+)*__";
     id tbigClass = objc_getClass("NSToolbarItemGroup");
     if (tbigClass && [item isKindOfClass:tbigClass])
     {
-      NSArray* subs = [(NSToolbarItemGroup*)item subitems];
+      NSArray* subs = [item subitems];
       NSEnumerator* enumerator2 = [subs objectEnumerator];
       NSToolbarItem* item2;
       while ((item2 = [enumerator2 nextObject]))
