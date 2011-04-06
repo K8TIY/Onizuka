@@ -18,7 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 @interface Onizuka : NSObject
 {
-  NSString*  _appName;    // Used for menu items like "About MyApp...".
+  NSString*  _appName;    // Used for menu items like "About MyApp".
   NSString*  _appVersion; // The short version string like "2.0.1".
   regex_t    _regex;      // Matches __BLAH_BLAH__
 }
@@ -28,16 +28,22 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 -(void)localizeMenu:(NSMenu*)menu;
 -(void)localizeWindow:(NSWindow*)window;
 -(void)localizeView:(NSView*)window;
-// Low-level method that localizes item via setLabel: setTitle: or
-// setStringValue: (using the first method that item responds to).
-// If title is nil, uses existing label, title, or value.
+// Low-level nonrecursive method that localizes via setTitle:, setStringValue:,
+// setLabel:, setToolTip:, and setPaletteLabel:, using any and all of these
+// (and their associated getters) if the object responds to the selector.
+// If title is nil, uses existing label, title, or value, presumably set up
+// in Interface Builder.
 // Generally this is used internally when you call one of the three high-level
 // methods above. You would typically use a non-nil title when changing an item
 // in response to some change in application  state, for example:
 //   [[Onizuka sharedOnizuka] localizeObject:myTextField
 //                            withTitle:@"__NETWORK_ERROR__"];
+// But, for some objects you would end up setting its string value,
+// tool tip, and everything to the value you pass in.
+// For really fine control, you may have to use even lower level
+// techniques, like copyLocalizedTitle: below.
 -(void)localizeObject:(id)item withTitle:(NSString*)title;
 -(NSMutableString*)copyLocalizedTitle:(NSString*)title;
-// Returns an autoreleased string
+// Returns an autoreleased string.
 -(NSString*)bestLocalizedString:(NSString*)key;
 @end
