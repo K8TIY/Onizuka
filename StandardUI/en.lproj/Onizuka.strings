@@ -1,5 +1,5 @@
 // Menus
-"__ABOUT__" = "About __APPNAME__...";
+"__ABOUT__" = "About __APPNAME__";
 "__PREFS__" = "Preferences...";
 "__SERVICES__" = "Services";
 "__HIDE__" = "Hide __APPNAME__";
@@ -38,3 +38,5 @@
 
 // Standard
 "__OK__" = "OK";
+// For the preferences window, not menu
+"__PREFERENCES__" = "Preferences";

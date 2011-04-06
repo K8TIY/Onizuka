@@ -1,5 +1,5 @@
 // Menus
-"__ABOUT__" = "__APPNAME__ について...";
+"__ABOUT__" = "__APPNAME__ について";
 "__PREFS__" = "環境設定...";
 "__SERVICES__" = "サービス";
 "__HIDE__" = "__APPNAME__ を隠す";
@@ -37,3 +37,5 @@
 
 // Standard
 "__OK__" = "OK";
+// For the preferences window, not menu
+"__PREFERENCES__" = "環境設定";
