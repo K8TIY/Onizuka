@@ -284,7 +284,7 @@ static const char* gRegexString = "__[A-Z]+(_[A-Z]+)*__";
     id tbigClass = objc_getClass("NSToolbarItemGroup");
     if (tbigClass && [item isKindOfClass:tbigClass])
     {
-      NSArray* subs = [item subitems];
+      NSArray* subs = [item performSelector:@selector(subitems)];
       NSEnumerator* enumerator2 = [subs objectEnumerator];
       NSToolbarItem* item2;
       while ((item2 = [enumerator2 nextObject]))
