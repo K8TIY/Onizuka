@@ -1,6 +1,6 @@
 // Menus
 "__ABOUT__" = "About __APPNAME__";
-"__PREFS__" = "Preferences...";
+"__PREFS__" = "Preferences…";
 "__SERVICES__" = "Services";
 "__HIDE__" = "Hide __APPNAME__";
 "__HIDE_OTHERS__" = "Hide Others";
@@ -9,15 +9,15 @@
 
 "__FILE__" = "File";
 "__NEW__" = "New";
-"__OPEN__" = "Open...";
+"__OPEN__" = "Open…";
 "__OPEN_RECENT__" = "Open Recent";
 "__CLEAR_MENU__" = "Clear Menu";
 "__CLOSE__" = "Close";
 "__SAVE__" = "Save";
-"__SAVE_AS__" = "Save As...";
+"__SAVE_AS__" = "Save As…";
 "__REVERT__" = "Revert";
-"__PAGE_SETUP__" = "Page Setup...";
-"__PRINT__" = "Print...";
+"__PAGE_SETUP__" = "Page Setup…";
+"__PRINT__" = "Print…";
 
 "__EDIT__" = "Edit";
 "__UNDO__" = "Undo";
