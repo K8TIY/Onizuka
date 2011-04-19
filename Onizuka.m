@@ -424,7 +424,7 @@ static const char* gRegexString = "__[A-Z]+(_[A-Z]+)*__";
       {
         p = [mb pathForResource:@"Onizuka" ofType:@"strings"
                 inDirectory:nil forLocalization:lang];
-        NSDictionary* strings = [[NSDictionary alloc] initWithContentsOfFile:p];
+        strings = [[NSDictionary alloc] initWithContentsOfFile:p];
         localized = [strings objectForKey:key];
         if (localized)
         {
