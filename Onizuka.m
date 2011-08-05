@@ -78,6 +78,11 @@ static const char* gRegexString = "__[A-Z]+(_[A-Z]+)*__";
       //NSLog(@"Localizing menu item %@", item);
       [self localizeObject:item withTitle:nil];
       if ([item submenu]) [self localizeMenu:[item submenu]];
+      if ([item respondsToSelector:@selector(view)])
+      {
+        id view = [item performSelector:@selector(view)];
+        [self localizeView:view];
+      }
     }
   }
 }
