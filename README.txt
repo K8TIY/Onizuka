@@ -41,3 +41,6 @@ I recommend selecting the StandardUI directory and dragging it into the files
 section of the XCode interface. It worked for me on Leopard, haven't tried it on
 Snow yet.
 
+Todo:
+
+* Support attributed strings
