@@ -341,7 +341,6 @@ static const char* gRegexString = "__[A-Z]+(_[A-Z]+)*__";
     if (!localized) localized = loc1;
     else [loc1 release];
   }
-  //else localized = [[NSMutableString alloc] initWithString:title];
   return localized;
 }
 
@@ -361,9 +360,11 @@ static const char* gRegexString = "__[A-Z]+(_[A-Z]+)*__";
     int e = regexec(&_regex, s, 1, &match, REG_STARTEND);
     if (e)
     {
-      char errbuf[1000];
-      regerror(e, &_regex, errbuf, 1000);
+      size_t errneeded = regerror(e, &_regex, NULL, 0);
+      char* errbuf = malloc(errneeded);
+      regerror(e, &_regex, errbuf, errneeded);
       if (e != REG_NOMATCH) NSLog(@"%d: %s", e, errbuf);
+      free(errbuf);
       break;
     }
     if (!localized) localized = [[NSMutableString alloc] init];
@@ -406,7 +407,7 @@ static const char* gRegexString = "__[A-Z]+(_[A-Z]+)*__";
 -(NSString*)bestLocalizedString:(NSString*)key
 {
   NSString* localized = NSLocalizedString(key, nil);
-  if ([localized isEqual:key])
+  if ([localized isEqualToString:key])
   {
     NSBundle* mb = [NSBundle mainBundle];
     NSArray* locs = [NSBundle preferredLocalizationsFromArray:[mb preferredLocalizations]];
