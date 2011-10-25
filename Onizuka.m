@@ -23,12 +23,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 -(void)localizeSegmentedControl:(NSSegmentedControl*)item;
 -(void)localizeComboBox:(NSComboBox*)box;
 -(void)localizeToolbar:(NSToolbar*)bar;
--(NSMutableString*)copyLocalizedTitle1Pass:(NSString*)title;
+-(NSObject*)copyLocalizedTitle1Pass:(NSObject*)title;
 @end
 
 @implementation Onizuka
 static Onizuka* gSharedOnizuka = nil;
-static const char* gRegexString = "__[A-Z]+(_[A-Z]+)*__";
 
 +(Onizuka*)sharedOnizuka
 {
@@ -48,16 +47,12 @@ static const char* gRegexString = "__[A-Z]+(_[A-Z]+)*__";
   NSString* version = [mb objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
   if (!version) version = @"1.0";
   _appVersion = [[NSString alloc] initWithString:version];
-  if (0 != regcomp(&_regex, gRegexString, REG_EXTENDED))
-    [NSException raise:@"OnizukaException"
-                 format:@"Error: could not compile Onizuka regex '%s'", gRegexString];
   return self;
 }
 
 -(void)dealloc
 {
   [_appName release];
-  regfree(&_regex);
   [super dealloc];
 }
 
@@ -167,18 +162,8 @@ static const char* gRegexString = "__[A-Z]+(_[A-Z]+)*__";
 -(void)localizeTextView:(NSTextView*)tv
 {
   NSTextStorage* ts = [tv textStorage];
-  NSString* str = [ts string];
-  NSString* localized = [self copyLocalizedTitle:str];
-  if (localized)
-  {
-    NSRange range = NSMakeRange(0, 1);
-    NSDictionary* attrs = [ts attributesAtIndex:0 effectiveRange:&range];
-    range.length = [str length];
-    NSAttributedString* attrStr = [[NSAttributedString alloc] initWithString:localized attributes:attrs];
-    [localized release];
-    [ts replaceCharactersInRange:range withAttributedString:attrStr];
-    [attrStr release];
-  }
+  NSAttributedString* localized = (NSAttributedString*)[self copyLocalizedTitle:ts];
+  if (localized) [ts setAttributedString:localized];
 }
 
 -(void)localizeTableView:(NSTableView*)item
@@ -204,7 +189,7 @@ static const char* gRegexString = "__[A-Z]+(_[A-Z]+)*__";
       NSString* title = [cell placeholderString];
       if (title)
       {
-        NSString* localized = [self copyLocalizedTitle:title];
+        NSString* localized = (NSString*)[self copyLocalizedTitle:title];
         if (![localized isEqualToString:title])
         {
           [cell setPlaceholderString:localized];
@@ -237,13 +222,13 @@ static const char* gRegexString = "__[A-Z]+(_[A-Z]+)*__";
   NSSegmentedCell* cell = [item cell];
   for (i = 0; i < nsegs; i++)
   {
-    NSString* lab = [self copyLocalizedTitle:[cell labelForSegment:i]];
+    NSString* lab = (NSString*)[self copyLocalizedTitle:[cell labelForSegment:i]];
     if (lab)
     {
       [cell setLabel:lab forSegment:i];
       [lab release];
     }
-    lab = [self copyLocalizedTitle:[cell toolTipForSegment:i]];
+    lab = (NSString*)[self copyLocalizedTitle:[cell toolTipForSegment:i]];
     if (lab)
     {
       [cell setToolTip:lab forSegment:i];
@@ -301,24 +286,37 @@ static const char* gRegexString = "__[A-Z]+(_[A-Z]+)*__";
 
 -(void)localizeObject:(id)item withTitle:(NSString*)title
 {
-  NSMutableString* localized;
-  SEL getters[5] = {@selector(title),@selector(stringValue),@selector(label),@selector(toolTip),@selector(paletteLabel)};
-  SEL setters[5] = {@selector(setTitle:),@selector(setStringValue:),@selector(setLabel:),@selector(setToolTip:),@selector(setPaletteLabel:)};
+  SEL getters[6] = {@selector(title),@selector(stringValue),
+                    @selector(attributedStringValue),@selector(label),
+                    @selector(toolTip),@selector(paletteLabel)};
+  SEL setters[6] = {@selector(setTitle:),@selector(setStringValue:),
+                    @selector(setAttributedStringValue:),@selector(setLabel:),
+                    @selector(setToolTip:),@selector(setPaletteLabel:)};
   unsigned i;
-  for (i = 0; i < 5; i++)
+  if (!item) return;
+  // NSPathControl doesn't like atributed string localizations.
+  id pcClass = objc_getClass("NSPathControl");
+  for (i = 0; i < 6; i++)
   {
+    if (i == 2 && pcClass && [item isKindOfClass:pcClass]) continue;
     if ([item respondsToSelector:getters[i]] &&
         [item respondsToSelector:setters[i]])
     {
       NSString* locTitle = (title)? title:[item performSelector:getters[i] withObject:nil];
       if (locTitle)
       {
-        localized = [self copyLocalizedTitle:locTitle];
+        NSObject* localized = [self copyLocalizedTitle:locTitle];
         if (localized)
         {
-          if (![localized isEqualToString:locTitle])
+          NSString* comp = (NSString*)localized;
+          if ([localized isKindOfClass:[NSAttributedString class]])
+            comp = [(NSAttributedString*)localized string];
+          if (![comp isEqualToString:locTitle])
           {
+            NS_DURING
             [item performSelector:setters[i] withObject:localized];
+            NS_HANDLER
+            NS_ENDHANDLER
           }
           [localized release];
           localized = nil;
@@ -328,11 +326,14 @@ static const char* gRegexString = "__[A-Z]+(_[A-Z]+)*__";
   }
 }
 
-// Returns a string that must be released, or nil if no localization could be found.
--(NSMutableString*)copyLocalizedTitle:(NSString*)title
+// Returns an NSMutableString if title is an NSString;
+// Returns an NSMutableAttributedString if title is an NSAttributedString.
+// In either case, it must be released by the caller.
+// Returns nil if no localization could be found.
+-(NSObject*)copyLocalizedTitle:(NSObject*)title
 {
-  NSMutableString* localized = nil;
-  NSMutableString* loc1 = [self copyLocalizedTitle1Pass:title];
+  NSObject* localized = nil;
+  NSObject* loc1 = [self copyLocalizedTitle1Pass:title];
   //NSLog(@"Pass 1: %@", loc1);
   if (loc1)
   {
@@ -344,62 +345,78 @@ static const char* gRegexString = "__[A-Z]+(_[A-Z]+)*__";
   return localized;
 }
 
--(NSMutableString*)copyLocalizedTitle1Pass:(NSString*)title
+-(NSObject*)copyLocalizedTitle1Pass:(NSObject*)title
 {
   if (!title) return nil;
-  NSMutableString* localized = nil;
-  const char* s = [title UTF8String];
-  regoff_t handled = 0L; // The last character we handled
-  regmatch_t match = {0,strlen(s)};
-  BOOL gotOne = NO;
-  NSString* add;
-  NSString* loc;
-  //NSLog(@"%llu-%llu handled %llu", match.rm_so, match.rm_eo, handled);
-  while (YES)
+  BOOL attr = [title isKindOfClass:[NSAttributedString class]];
+  NSObject* localized = [title mutableCopy];
+  NSString* s = (attr)? [(NSMutableAttributedString*)title string]:(NSString*)title;
+  unsigned i, len = [s length];
+  unsigned state = 0;
+  unsigned start = 0;
+  for (i = 0; i < len; i++)
   {
-    int e = regexec(&_regex, s, 1, &match, REG_STARTEND);
-    if (e)
+    unichar c = [s characterAtIndex:i];
+    // State table for FSA accepting __[A-Z]+(_[A-Z]+)*__
+    switch (state)
     {
-      size_t errneeded = regerror(e, &_regex, NULL, 0);
-      char* errbuf = malloc(errneeded);
-      regerror(e, &_regex, errbuf, errneeded);
-      if (e != REG_NOMATCH) NSLog(@"%d: %s", e, errbuf);
-      free(errbuf);
+      case 0:
+      if (c == '_')
+      {
+        state = 1;
+        start = i;
+      }
+      break;
+      
+      case 1:
+      if (c == '_') state = 2;
+      else state = 0;
+      break;
+      
+      case 2:
+      if (c == '_')
+      {
+        state = 1;
+        start = i-1;
+      }
+      else if (isupper(c)) state = 3;
+      else state = 0;
+      break;
+      
+      case 3:
+      if (c == '_') state = 4;
+      else if (isupper(c)) state = 3;
+      else state = 0;
+      break;
+      
+      case 4:
+      if (c == '_')
+      {
+        NSString* loc = nil;
+        unsigned sublen = 1+i-start;
+        NSRange r = NSMakeRange(start, sublen);
+        NSString* sub = [s substringWithRange:r];
+        if ([sub isEqualToString:@"__APPNAME__"]) loc = _appName;
+        else if ([sub isEqual:@"__VERSION__"]) loc = _appVersion;
+        else loc = [self bestLocalizedString:sub];
+        if (loc)
+        {
+          // Go forward or back depending on the size difference between capture
+          // and replacement text.
+          int delta = sublen - [loc length];
+          len -= delta;
+          i -= delta;
+          [(NSMutableString*)localized replaceCharactersInRange:r
+                                       withString:loc];
+          s = (attr)? [(NSMutableAttributedString*)localized string]:(NSString*)localized;
+        }
+        state = 0;
+        start = 0;
+      }
+      else if (isupper(c)) state = 3;
+      else state = 0;
       break;
     }
-    if (!localized) localized = [[NSMutableString alloc] init];
-    gotOne = YES;
-    //NSLog(@"regexec: %llu-%llu handled %llu", match.rm_so, match.rm_eo, handled);
-    if (match.rm_so > handled)
-    {
-      add = [[NSString alloc] initWithBytes:s+handled
-                              length:match.rm_so-handled
-                              encoding:NSUTF8StringEncoding];
-      [localized appendString:add];
-      [add release];
-    }
-    add = [[NSString alloc] initWithBytes:s+match.rm_so
-                            length:match.rm_eo-match.rm_so
-                            encoding:NSUTF8StringEncoding];
-    if ([add isEqual:@"__APPNAME__"]) loc = _appName;
-    else if ([add isEqual:@"__VERSION__"]) loc = _appVersion;
-    else loc = [self bestLocalizedString:add];
-    [localized appendString:(loc)? loc:add];
-    [add release];
-    handled = match.rm_eo;
-    match.rm_so = match.rm_eo;
-    match.rm_eo = strlen(s);
-  }
-  if (gotOne && handled < strlen(s))
-  {
-    add = [[NSString alloc] initWithBytes:s+handled
-                            length:strlen(s)-handled
-                            encoding:NSUTF8StringEncoding];
-    if ([add isEqual:@"__APPNAME__"]) loc = _appName;
-    else if ([add isEqual:@"__VERSION__"]) loc = _appVersion;
-    else loc = [self bestLocalizedString:add];
-    [localized appendString:(loc)? loc:add];
-    [add release];
   }
   return localized;
 }
