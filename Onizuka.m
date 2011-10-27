@@ -162,7 +162,7 @@ static Onizuka* gSharedOnizuka = nil;
 -(void)localizeTextView:(NSTextView*)tv
 {
   NSTextStorage* ts = [tv textStorage];
-  NSAttributedString* localized = (NSAttributedString*)[self copyLocalizedTitle:ts];
+  NSAttributedString* localized = [self copyLocalizedAttributedTitle:ts];
   if (localized) [ts setAttributedString:localized];
 }
 
@@ -294,6 +294,9 @@ static Onizuka* gSharedOnizuka = nil;
                     @selector(setToolTip:),@selector(setPaletteLabel:)};
   unsigned i;
   if (!item) return;
+  NSString* cmp1 = title;
+  if ([cmp1 isKindOfClass:[NSAttributedString class]])
+    cmp1 = [(NSAttributedString*)title string];
   // NSPathControl doesn't like atributed string localizations.
   id pcClass = objc_getClass("NSPathControl");
   for (i = 0; i < 6; i++)
@@ -302,16 +305,17 @@ static Onizuka* gSharedOnizuka = nil;
     if ([item respondsToSelector:getters[i]] &&
         [item respondsToSelector:setters[i]])
     {
-      NSString* locTitle = (title)? title:[item performSelector:getters[i] withObject:nil];
+      NSObject* locTitle = (title)? title:[item performSelector:getters[i]];
       if (locTitle)
       {
-        NSObject* localized = [self copyLocalizedTitle:locTitle];
+        NSObject* localized = [self copyLocalizedTitle:(NSString*)locTitle];
         if (localized)
         {
-          NSString* comp = (NSString*)localized;
+          NSString* cmp2 = (NSString*)localized;
           if ([localized isKindOfClass:[NSAttributedString class]])
-            comp = [(NSAttributedString*)localized string];
-          if (![comp isEqualToString:locTitle])
+            cmp2 = [(NSAttributedString*)localized string];
+          
+          if (![cmp1 isEqualToString:cmp2])
           {
             NS_DURING
             [item performSelector:setters[i] withObject:localized];
@@ -326,23 +330,26 @@ static Onizuka* gSharedOnizuka = nil;
   }
 }
 
-// Returns an NSMutableString if title is an NSString;
-// Returns an NSMutableAttributedString if title is an NSAttributedString.
-// In either case, it must be released by the caller.
 // Returns nil if no localization could be found.
--(NSObject*)copyLocalizedTitle:(NSObject*)title
+-(NSString*)copyLocalizedTitle:(NSString*)title
 {
-  NSObject* localized = nil;
-  NSObject* loc1 = [self copyLocalizedTitle1Pass:title];
+  NSString* localized = nil;
+  NSString* loc1 = (NSString*)[self copyLocalizedTitle1Pass:title];
   //NSLog(@"Pass 1: %@", loc1);
   if (loc1)
   {
-    localized = [self copyLocalizedTitle1Pass:loc1];
+    localized = (NSString*)[self copyLocalizedTitle1Pass:loc1];
     //NSLog(@"Pass 2: %@", localized);
     if (!localized) localized = loc1;
     else [loc1 release];
   }
   return localized;
+}
+
+// Returns nil if no localization could be found.
+-(NSAttributedString*)copyLocalizedAttributedTitle:(NSAttributedString*)title
+{
+  return (NSAttributedString*)[self copyLocalizedTitle:(NSString*)title];
 }
 
 -(NSObject*)copyLocalizedTitle1Pass:(NSObject*)title

@@ -42,12 +42,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 // For really fine control, you may have to use even lower level
 // techniques, like copyLocalizedTitle: below.
 -(void)localizeObject:(id)item withTitle:(NSString*)title;
-// Returns an NSMutableString if title is an NSString;
-// Returns an NSMutableAttributedString if title is an NSAttributedString.
-// In either case, it must be released by the caller.
+// The next two wrap basically the same code. If your title is an attributed
+// string, that's what you get back. Otherwise you get back a string.
 // Returns a copy of the title with all instances of the __X__ pattern replaced
 // with localized substrings, if they could be found.
--(NSObject*)copyLocalizedTitle:(NSObject*)title;
+-(NSString*)copyLocalizedTitle:(NSString*)title;
+-(NSAttributedString*)copyLocalizedAttributedTitle:(NSAttributedString*)title;
 // Searches Localizable.strings and Onizuka.strings in order of user
 // language preference and returns the first match for the key.
 // Returns an autoreleased string.
