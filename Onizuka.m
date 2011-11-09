@@ -299,9 +299,12 @@ static Onizuka* gSharedOnizuka = nil;
     cmp1 = [(NSAttributedString*)title string];
   // NSPathControl doesn't like atributed string localizations.
   id pcClass = objc_getClass("NSPathControl");
+  BOOL gotOne = NO;
   for (i = 0; i < 6; i++)
   {
     if (i == 2 && pcClass && [item isKindOfClass:pcClass]) continue;
+    // If this is a passed-in title, don't fiddle with attributed strings.
+    if (i == 2 && title) continue;
     if ([item respondsToSelector:getters[i]] &&
         [item respondsToSelector:setters[i]])
     {
@@ -311,15 +314,16 @@ static Onizuka* gSharedOnizuka = nil;
         NSObject* localized = [self copyLocalizedTitle:(NSString*)locTitle];
         if (localized)
         {
+          gotOne = YES;
           NSString* cmp2 = (NSString*)localized;
           if ([localized isKindOfClass:[NSAttributedString class]])
             cmp2 = [(NSAttributedString*)localized string];
-          
           if (![cmp1 isEqualToString:cmp2])
           {
             NS_DURING
             [item performSelector:setters[i] withObject:localized];
             NS_HANDLER
+            gotOne = NO;
             NS_ENDHANDLER
           }
           [localized release];
@@ -327,6 +331,8 @@ static Onizuka* gSharedOnizuka = nil;
         }
       }
     }
+    // I expect a passed-in title will correspond to only one accessor.
+    if (title && gotOne) break;
   }
 }
 
