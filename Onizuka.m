@@ -163,7 +163,11 @@ static Onizuka* gSharedOnizuka = nil;
 {
   NSTextStorage* ts = [tv textStorage];
   NSAttributedString* localized = [self copyLocalizedAttributedTitle:ts];
-  if (localized) [ts setAttributedString:localized];
+  if (localized)
+  {
+    [ts setAttributedString:localized];
+    [localized release];
+  }
 }
 
 -(void)localizeTableView:(NSTableView*)item
