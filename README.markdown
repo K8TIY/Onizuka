@@ -17,7 +17,7 @@ of SPOT rule: fundamental flaw) because I like stuff that generalizes.
 To use the code, instantiate the singleton "Onizuka" and give it a window,
 menu, or view to work on. The code recursively walks the view hierarchy and
 localizes anything with a string value or title or label that looks like
-`__BLAH_BLAH__` (uppercase alphabetic substrings separated by underscores,
+`__BLAH_Blah_1__` (alphanumeric substrings separated by underscores,
 and flanked by two underscores) if the placeholder title can be found in
 Localizable.strings or the supplied Onizuka.strings.
 It does this in a two-pass manner, so you can have strings file entries like this:

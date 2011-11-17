@@ -374,7 +374,7 @@ static Onizuka* gSharedOnizuka = nil;
   for (i = 0; i < len; i++)
   {
     unichar c = [s characterAtIndex:i];
-    // State table for FSA accepting __[A-Z]+(_[A-Z]+)*__
+    // State table for FSA accepting /__[A-Z0-9]+(_[A-Z0-9]+)*__/i
     switch (state)
     {
       case 0:
@@ -396,13 +396,13 @@ static Onizuka* gSharedOnizuka = nil;
         state = 1;
         start = i-1;
       }
-      else if (isupper(c)) state = 3;
+      else if (isalpha(c) || isdigit(c)) state = 3;
       else state = 0;
       break;
       
       case 3:
       if (c == '_') state = 4;
-      else if (isupper(c)) state = 3;
+      else if (isalpha(c) || isdigit(c)) state = 3;
       else state = 0;
       break;
       
@@ -430,7 +430,7 @@ static Onizuka* gSharedOnizuka = nil;
         state = 0;
         start = 0;
       }
-      else if (isupper(c)) state = 3;
+      else if (isalpha(c) || isdigit(c)) state = 3;
       else state = 0;
       break;
     }
