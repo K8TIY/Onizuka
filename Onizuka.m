@@ -165,7 +165,14 @@ static Onizuka* gSharedOnizuka = nil;
   NSAttributedString* localized = [self copyLocalizedAttributedTitle:ts];
   if (localized)
   {
-    [ts setAttributedString:localized];
+    if ([localized isKindOfClass:[NSString class]])
+    {
+      NSAttributedString* as = [[NSAttributedString alloc]
+                                 initWithString:(NSString*)localized];
+      [ts setAttributedString:as];
+      [as release];
+    }
+    else [ts setAttributedString:localized];
     [localized release];
   }
 }
