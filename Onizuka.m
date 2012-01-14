@@ -1,5 +1,5 @@
 /*
-Copyright © 2005-2011 Brian S. Hall
+Copyright © 2005-2012 Brian S. Hall
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 2 or later as
@@ -38,8 +38,6 @@ static Onizuka* gSharedOnizuka = nil;
 -(id)init
 {
   self = [super init];
-  // Uses the value of CFBundleName from Info.plist (which is localizable).
-  // If not found, uses NSProcessInfo to get the name.
   NSBundle* mb = [NSBundle mainBundle];
   NSString* appname = [mb objectForInfoDictionaryKey:(NSString*)kCFBundleNameKey];
   if (!appname) appname = [[NSProcessInfo processInfo] processName];
@@ -47,13 +45,21 @@ static Onizuka* gSharedOnizuka = nil;
   NSString* version = [mb objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
   if (!version) version = @"1.0";
   _appVersion = [[NSString alloc] initWithString:version];
+  _cache = [[NSMutableDictionary alloc] init];
   return self;
 }
 
 -(void)dealloc
 {
   [_appName release];
+  [_appVersion release];
+  [_cache release];
   [super dealloc];
+}
+
+-(void)clearCache
+{
+  [_cache removeAllObjects];
 }
 
 -(NSString*)appName { return _appName; }
@@ -432,7 +438,8 @@ static Onizuka* gSharedOnizuka = nil;
           i -= delta;
           [(NSMutableString*)localized replaceCharactersInRange:r
                                        withString:loc];
-          s = (attr)? [(NSMutableAttributedString*)localized string]:(NSString*)localized;
+          s = (attr)? [(NSMutableAttributedString*)localized string]:
+                      (NSString*)localized;
         }
         state = 0;
         start = 0;
@@ -450,8 +457,10 @@ static Onizuka* gSharedOnizuka = nil;
   NSString* localized = NSLocalizedString(key, nil);
   if ([localized isEqualToString:key])
   {
+    NSFileManager* fm = [NSFileManager defaultManager];
     NSBundle* mb = [NSBundle mainBundle];
-    NSArray* locs = [NSBundle preferredLocalizationsFromArray:[mb preferredLocalizations]];
+    NSArray* pl = [mb preferredLocalizations];
+    NSArray* locs = [NSBundle preferredLocalizationsFromArray:pl];
     NSEnumerator* iter = [locs objectEnumerator];
     NSString* lang;
     BOOL gotIt = NO;
@@ -459,26 +468,42 @@ static Onizuka* gSharedOnizuka = nil;
     {
       NSString* p = [mb pathForResource:@"Localizable" ofType:@"strings"
                         inDirectory:nil forLocalization:lang];
-      NSDictionary* strings = [[NSDictionary alloc] initWithContentsOfFile:p];
+      NSDictionary* strings = [_cache objectForKey:p];
+      if (!strings && [fm fileExistsAtPath:p])
+      {
+        strings = [[NSDictionary alloc] initWithContentsOfFile:p];
+        if (strings)
+        {
+          [_cache setObject:strings forKey:p];
+          [strings release];
+        }
+      }
       localized = [strings objectForKey:key];
       if (localized)
       {
         [[localized retain] autorelease];
         gotIt = YES;
       }
-      if (strings) [strings release];
       if (!gotIt)
       {
         p = [mb pathForResource:@"Onizuka" ofType:@"strings"
                 inDirectory:nil forLocalization:lang];
-        strings = [[NSDictionary alloc] initWithContentsOfFile:p];
+        strings = [_cache objectForKey:p];
+        if (!strings && [fm fileExistsAtPath:p])
+        {
+          strings = [[NSDictionary alloc] initWithContentsOfFile:p];
+          if (strings)
+          {
+            [_cache setObject:strings forKey:p];
+            [strings release];
+          }
+        }
         localized = [strings objectForKey:key];
         if (localized)
         {
           [[localized retain] autorelease];
           gotIt = YES;
         }
-        if (strings) [strings release];
       }
     }
   }

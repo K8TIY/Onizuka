@@ -1,5 +1,5 @@
 /*
-Copyright © 2005-2011 Brian S. Hall
+Copyright © 2005-2012 Brian S. Hall
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 2 or later as
@@ -17,11 +17,24 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 @interface Onizuka : NSObject
 {
-  NSString*  _appName;    // Used for menu items like "About MyApp".
-  NSString*  _appVersion; // The short version string like "2.0.1".
+  NSString*            _appName;
+  NSString*            _appVersion;
+  NSMutableDictionary* _cache;
 }
 +(Onizuka*)sharedOnizuka;
+// Localizable.strings (and Onizuka.strings) dictionaries are cached for
+// faster subsequent lookups. If your strings files are large, if you have
+// partial localizations that may default back to a more general localization
+// (e.g., an en_GB file that only contains a few British vs American spelling
+// differences), and/or you will do most localization once at program launch
+// and thereafter do little or no on-the-fly localization, call this method to
+// possibly improve the memory footprint of your application.
+-(void)clearCache;
+// Used for menu items like "About MyApp".
+// Uses the value of CFBundleName from Info.plist (which is localizable).
+// If not found, uses NSProcessInfo to get the name.
 -(NSString*)appName;
+// The short version string like "2.0.1".
 -(NSString*)appVersion;
 -(void)localizeMenu:(NSMenu*)menu;
 -(void)localizeWindow:(NSWindow*)window;
