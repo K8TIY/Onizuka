@@ -1,4 +1,4 @@
-## This is Onizuka version 1.2
+## This is Onizuka version 1.3
 
 I named it for Onizuka Eikichi of the Japanese manga/anime/drama/film
 GTO "Great Teacher Onizuka", which holds a special place in my heart.
@@ -59,16 +59,18 @@ I recommend selecting the StandardUI directory and dragging it into the files
 section of the XCode interface. It worked for me on Leopard, haven't tried it on
 Snow yet.
 
-### What's new in 1.2?
+### Version changes
 
-* Onizuka now caches the `.strings` files for faster subsequent lookups,
+* 1.3: Onizuka now caches the `.strings` files for faster subsequent lookups,
 and makes public a method to clear the cache when you are (more or less) done
 using it.
 
-### What's new in 1.1?
+* 1.2: Expanded format of localizable substring template to allow lowercase letters
+and numbers.
 
-* Onizuka can handle localizing parts of attributed strings
-(like in an NSTextView).
+
+* 1.1: Onizuka can handle localizing parts of attributed strings
+(like in an `NSTextView`).
 
 ### Todo
 
@@ -77,5 +79,5 @@ Can someone help me with these? Like oatmeal, it's the "right thing to do."
 
 ### Bugs
 
-* I detect NSPathControl explicitly and suppress doing any attributed string
+* I detect `NSPathControl` explicitly and suppress doing any attributed string
  stuff with it. It's not pretty but it works.
