@@ -4,7 +4,9 @@
 @implementation OnizukaTester
 -(void)awakeFromNib
 {
-  [[Onizuka sharedOnizuka] localizeMenu:[[NSApplication sharedApplication] mainMenu]];
-  [[Onizuka sharedOnizuka] localizeWindow:_window];
+  Onizuka* oz = [Onizuka sharedOnizuka];
+  [oz localizeMenu:[[NSApplication sharedApplication] mainMenu]];
+  [oz localizeWindow:_window];
+  [oz clearCache];
 }
 @end
