@@ -14,6 +14,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 #import "Onizuka.h"
+#import <objc/objc-class.h>
 
 @interface Onizuka (Private)
 -(void)localizeTextView:(NSTextView*)tv;
