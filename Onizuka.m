@@ -329,6 +329,12 @@ static Onizuka* gSharedOnizuka = nil;
       NSObject* locTitle = (title)? title:[item performSelector:getters[i]];
       if (locTitle)
       {
+        if (!cmp1)
+        {
+          cmp1 = (NSString*)locTitle;
+          if ([cmp1 isKindOfClass:[NSAttributedString class]])
+            cmp1 = [(NSAttributedString*)locTitle string];
+        }
         NSObject* localized = [self copyLocalizedTitle:(NSString*)locTitle];
         if (localized)
         {
