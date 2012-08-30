@@ -466,9 +466,9 @@ static Onizuka* gSharedOnizuka = nil;
   {
     NSFileManager* fm = [NSFileManager defaultManager];
     NSBundle* mb = [NSBundle mainBundle];
-    NSArray* pl = [mb preferredLocalizations];
-    NSArray* locs = [NSBundle preferredLocalizationsFromArray:pl];
-    NSEnumerator* iter = [locs objectEnumerator];
+    NSUserDefaults* defs = [NSUserDefaults standardUserDefaults];
+    NSArray* langs = [defs objectForKey:@"AppleLanguages"];
+    NSEnumerator* iter = [langs objectEnumerator];
     NSString* lang;
     BOOL gotIt = NO;
     while ((lang = [iter nextObject]) && !gotIt)
