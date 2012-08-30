@@ -1,4 +1,4 @@
-## This is Onizuka version 1.3
+## This is Onizuka version 1.4 for Mac OS X 10.3 (?) and later
 
 I named it for Onizuka Eikichi of the Japanese manga/anime/drama/film
 GTO "Great Teacher Onizuka", which holds a special place in my heart.
@@ -60,6 +60,8 @@ section of the XCode interface. It worked for me on Leopard, haven't tried it on
 Snow yet.
 
 ### Version changes
+* 1.4: Better support for partial localizations by using the AppleLanguages
+preferences and explicitly looking for Localizable.strings based on them.
 
 * 1.3: Onizuka now caches the `.strings` files for faster subsequent lookups,
 and makes public a method to clear the cache when you are (more or less) done
@@ -67,7 +69,6 @@ using it.
 
 * 1.2: Expanded format of localizable substring template to allow lowercase letters
 and numbers.
-
 
 * 1.1: Onizuka can handle localizing parts of attributed strings
 (like in an `NSTextView`).
