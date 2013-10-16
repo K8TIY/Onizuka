@@ -1,5 +1,6 @@
 // Menus
 "__ABOUT__" = "__APPNAME__ について";
+"__UPDATES__" = "アップデートを確認⋯";
 "__PREFS__" = "環境設定⋯";
 "__SERVICES__" = "サービス";
 "__HIDE__" = "__APPNAME__ を隠す";

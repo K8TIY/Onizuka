@@ -1,5 +1,6 @@
 // Menus
 "__ABOUT__" = "About __APPNAME__";
+"__UPDATES__" = "Check for Updates…";
 "__PREFS__" = "Preferences…";
 "__SERVICES__" = "Services";
 "__HIDE__" = "Hide __APPNAME__";
