@@ -60,6 +60,9 @@ section of the XCode interface. It worked for me on Leopard, haven't tried it on
 Snow yet.
 
 ### Version changes
+* 1.5 Vastly expands the list of provided localizations by pulling strings from
+Apple's glossary disk images.
+
 * 1.4: Better support for partial localizations by using the AppleLanguages
 preferences and explicitly looking for Localizable.strings based on them.
 
