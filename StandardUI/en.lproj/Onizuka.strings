@@ -16,7 +16,9 @@
 "__CLOSE__" = "Close";
 "__SAVE__" = "Save";
 "__SAVE_AS__" = "Save As…";
-"__REVERT__" = "Revert";
+"__EXPORT_AS__" = "Export As…";
+"__SAVE_ALL" = "Save All";
+"__REVERT__" = "Revert to Saved";
 "__PAGE_SETUP__" = "Page Setup…";
 "__PRINT__" = "Print…";
 
@@ -26,8 +28,16 @@
 "__CUT__" = "Cut";
 "__COPY__" = "Copy";
 "__PASTE__" = "Paste";
+"__PASTE_STYLE__" = "Paste and Match Style";
 "__DELETE__" = "Delete";
 "__SELECT_ALL__" = "Select All";
+"__FIND__" = "Find";
+"__FIND_ELL__" = "Find…";
+"__FIND_NEXT__" = "Find Next";
+"__FIND_PREVIOUS__" = "Find Previous";
+"__FIND_SELECTION__" = "Find Selection";
+"__JUMP_SELECTION__" = "Jump to Selection";
+"__SHOW_FONTS__" = "Show Fonts";
 
 "__WINDOW__" = "Window";
 "__MINIMIZE__" = "Minimize";

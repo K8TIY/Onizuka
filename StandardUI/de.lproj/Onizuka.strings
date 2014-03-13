@@ -1,0 +1,53 @@
+// Menus
+"__ABOUT__" = "Über __APPNAME__";
+"__UPDATES__" = "Nach Updates suchen …";
+"__PREFS__" = "Einstellungen …";
+"__SERVICES__" = "Dienste";
+"__HIDE__" = "__APPNAME__ ausblenden";
+"__HIDE_OTHERS__" = "Andere ausblenden";
+"__SHOW_ALL__" = "Alle einblenden";
+"__QUIT__" = "__APPNAME__ beended";
+
+"__FILE__" = "Ablage";
+"__NEW__" = "Neu";
+"__OPEN__" = "Öffnen…";
+"__OPEN_RECENT__" = "Benutzte Dokumente";
+"__CLEAR_MENU__" = "Menu löschen";
+"__CLOSE__" = "Schließen";
+"__SAVE__" = "Sichern";
+"__SAVE_AS__" = "Sichern als …";
+"__EXPORT_AS__" = "Exportieren als …";
+"__SAVE_ALL" = "Alles sichern";
+"__REVERT__" = "Zurück zur letzten Version";
+"__PAGE_SETUP__" = "Papierformat …";
+"__PRINT__" = "Drucken …";
+
+"__EDIT__" = "Bearbeiten";
+"__UNDO__" = "Widerrufen";
+"__REDO__" = "Wiederholen";
+"__CUT__" = "Ausschneiden";
+"__COPY__" = "Kopieren";
+"__PASTE__" = "Einfügen";
+"__PASTE_STYLE__" = "Einsetzen und Stil anpassen";
+"__DELETE__" = "Löschen";
+"__SELECT_ALL__" = "Alles auswählen";
+"__FIND__" = "Suchen";
+"__FIND_ELL__" = "Suchen …";
+"__FIND_NEXT__" = "Weitersuchen (vorwärts)";
+"__FIND_PREVIOUS__" = "Weitersuchen (rückwärts)";
+"__FIND_SELECTION__" = "Auswahl suchen";
+"__JUMP_SELECTION__" = "Jump to Selection";
+"__SHOW_FONTS__" = "Schriften einblenden";
+
+"__WINDOW__" = "Fenster";
+"__MINIMIZE__" = "Minimieren";
+"__ZOOM__" = "Zoomen";
+"__BRING_ALL_TO_FRONT__" = "Alle nach vorne bringen";
+
+"__HELP__" = "Hilfe";
+"__HELP_ITEM__" = "__APPNAME__-Hilfe";
+
+// Standard
+"__OK__" = "OK";
+// For the preferences window, not menu
+"__PREFERENCES__" = "Einstellungen";
