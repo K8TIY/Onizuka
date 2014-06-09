@@ -1,4 +1,5 @@
-## This is Onizuka for Mac OS X 10.3 (?) and later
+## This is Onizuka for Mac OS X 10.3-ish and later
+### MIT License
 
 I named it for Onizuka Eikichi of the Japanese manga/anime/drama/film
 GTO "Great Teacher Onizuka", which holds a special place in my heart.
@@ -60,6 +61,8 @@ section of the XCode interface. It worked for me on Leopard, haven't tried it on
 Snow yet.
 
 ### Version changes
+* 1.5.1 Re-licensed under MIT license.
+
 * 1.5 Vastly expands the list of provided localizations by pulling strings from
 Apple's glossary disk images.
 
