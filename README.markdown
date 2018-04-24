@@ -41,7 +41,7 @@ This allows you to do partial localizations, so long as you have at least one
 full localization. (In an ideal world maybe you would always do full
 localizations for every supported language, but if you write free software maybe
 you have to rely on translations trickling in from generous donors. Or maybe
-you're like me, and you sometimes put together an en_GB localization that just
+you're like me, and you sometimes put together an en-GB localization that just
 lists the dozen or so differences between American and British spellings.
 With Onizuka you can do that. I use that technique in my IPA Palette software
 ["velarised" vs "velarized"] and have had no complaints about it from anyone.)
@@ -50,17 +50,10 @@ Some container classes -- or those with a special accessor for cells or
 subviews -- possibly are not covered by the current code. Submissions welcome.
 I'd like to avoid diving into undocumented methods but it may be inevitable....
 
-Included is a MainMenu.nib on or from which you can base standard application
-menus. I think I've got them all wired up to First Responder, but in order to
-paste the menu into a new nib you have to copy BOTH the Main Menu and the First
-Responder, otherwise the connections get broken.
-
-Because XCode has such a weird (broken) workflow for making files localizable,
-I recommend selecting the StandardUI directory and dragging it into the files
-section of the XCode interface. It worked for me on Leopard, haven't tried it on
-Snow yet.
-
 ### Version changes
+* 1.6 Processes the AppleLanguages array to remove spurious "-US" suffixes
+found in later MacOS versions like High Sierra.
+
 * 1.5.1 Re-licensed under MIT license.
 
 * 1.5 Vastly expands the list of provided localizations by pulling strings from

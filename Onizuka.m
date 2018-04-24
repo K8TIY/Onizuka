@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright © 2005-2014 Brian S. Hall
+Copyright © 2005-2018 Brian S. Hall
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -56,6 +56,42 @@ static Onizuka* gSharedOnizuka = nil;
   if (!version) version = @"1.0";
   _appVersion = [[NSString alloc] initWithString:version];
   _cache = [[NSMutableDictionary alloc] init];
+  NSFileManager* fm = [NSFileManager defaultManager];
+  NSUserDefaults* defs = [NSUserDefaults standardUserDefaults];
+  NSArray* langs = [defs objectForKey:@"AppleLanguages"];
+  //NSLog(@"raw languages %@", langs);
+  NSMutableArray* tmpArray = [[NSMutableArray alloc] init];
+  NSEnumerator* iter = [langs objectEnumerator];
+  NSString* lang;
+  while (lang = [iter nextObject])
+  {
+    NSString* p = [mb pathForResource:@"Localizable" ofType:@"strings"
+                      inDirectory:nil forLocalization:lang];
+    if ([fm fileExistsAtPath:p])
+    {
+      [tmpArray addObject:lang];
+    }
+    NSArray* comps = [lang componentsSeparatedByString:@"-"];
+    if ([comps count] > 1)
+    {
+      NSMutableArray* mcomps = [[NSMutableArray alloc] initWithArray:comps];
+      while ([mcomps count] > 1)
+      {
+        [mcomps removeLastObject];
+        lang = [mcomps componentsJoinedByString:@"-"];
+        p = [mb pathForResource:@"Localizable" ofType:@"strings"
+                inDirectory:nil forLocalization:lang];
+        if ([fm fileExistsAtPath:p])
+        {
+          [tmpArray addObject:lang];
+        }
+      }
+      [mcomps release];
+    }
+  }
+  _languages = [[NSArray alloc] initWithArray:tmpArray];
+  [tmpArray release];
+  //NSLog(@"Languages: %@", _languages);
   return self;
 }
 
@@ -64,6 +100,7 @@ static Onizuka* gSharedOnizuka = nil;
   [_appName release];
   [_appVersion release];
   [_cache release];
+  [_languages release];
   [super dealloc];
 }
 
@@ -74,6 +111,7 @@ static Onizuka* gSharedOnizuka = nil;
 
 -(NSString*)appName { return _appName; }
 -(NSString*)appVersion { return _appVersion; }
+-(NSArray*)languages { return _languages; }
 
 -(void)localizeMenu:(NSMenu*)menu
 {
@@ -230,9 +268,9 @@ static Onizuka* gSharedOnizuka = nil;
 
 -(void)localizeMatrix:(NSMatrix*)matrix
 {
-  unsigned i = 0, j = 0;
-  unsigned rows = [matrix numberOfRows];
-  unsigned cols = [matrix numberOfColumns];
+  NSInteger i = 0, j = 0;
+  NSInteger rows = [matrix numberOfRows];
+  NSInteger cols = [matrix numberOfColumns];
   for (i = 0; i < rows; i++)
   {
     for (j = 0; j < cols; j++)
@@ -245,7 +283,7 @@ static Onizuka* gSharedOnizuka = nil;
 
 -(void)localizeSegmentedControl:(NSSegmentedControl*)item
 {
-  unsigned i, nsegs = [item segmentCount];
+  NSInteger i, nsegs = [item segmentCount];
   NSSegmentedCell* cell = [item cell];
   for (i = 0; i < nsegs; i++)
   {
@@ -397,9 +435,9 @@ static Onizuka* gSharedOnizuka = nil;
   BOOL attr = [title isKindOfClass:[NSAttributedString class]];
   NSObject* localized = [title mutableCopy];
   NSString* s = (attr)? [(NSMutableAttributedString*)title string]:(NSString*)title;
-  unsigned i, len = [s length];
-  unsigned state = 0;
-  unsigned start = 0;
+  NSInteger i, len = [s length];
+  NSInteger state = 0;
+  NSInteger start = 0;
   for (i = 0; i < len; i++)
   {
     unichar c = [s characterAtIndex:i];
@@ -439,7 +477,7 @@ static Onizuka* gSharedOnizuka = nil;
       if (c == '_')
       {
         NSString* loc = nil;
-        unsigned sublen = 1+i-start;
+        NSInteger sublen = 1+i-start;
         NSRange r = NSMakeRange(start, sublen);
         NSString* sub = [s substringWithRange:r];
         if ([sub isEqualToString:@"__APPNAME__"]) loc = _appName;
@@ -449,7 +487,7 @@ static Onizuka* gSharedOnizuka = nil;
         {
           // Go forward or back depending on the size difference between capture
           // and replacement text.
-          int delta = sublen - [loc length];
+          NSInteger delta = sublen - [loc length];
           len -= delta;
           i -= delta;
           [(NSMutableString*)localized replaceCharactersInRange:r
@@ -475,9 +513,7 @@ static Onizuka* gSharedOnizuka = nil;
   {
     NSFileManager* fm = [NSFileManager defaultManager];
     NSBundle* mb = [NSBundle mainBundle];
-    NSUserDefaults* defs = [NSUserDefaults standardUserDefaults];
-    NSArray* langs = [defs objectForKey:@"AppleLanguages"];
-    NSEnumerator* iter = [langs objectEnumerator];
+    NSEnumerator* iter = [_languages objectEnumerator];
     NSString* lang;
     BOOL gotIt = NO;
     while ((lang = [iter nextObject]) && !gotIt)

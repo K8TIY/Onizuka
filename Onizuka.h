@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright © 2005-2014 Brian S. Hall
+Copyright © 2005-2018 Brian S. Hall
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@ THE SOFTWARE.
   NSString*            _appName;
   NSString*            _appVersion;
   NSMutableDictionary* _cache;
+  NSArray*             _languages;
 }
 +(Onizuka*)sharedOnizuka;
 // Localizable.strings (and Onizuka.strings) dictionaries are cached for
