@@ -55,6 +55,9 @@ static Onizuka* gSharedOnizuka = nil;
   NSString* version = [mb objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
   if (!version) version = @"1.0";
   _appVersion = [[NSString alloc] initWithString:version];
+  version = [mb objectForInfoDictionaryKey:@"CFBundleVersion"];
+  if (!version) version = @"1.0";
+  _appLongVersion = [[NSString alloc] initWithString:version];
   _cache = [[NSMutableDictionary alloc] init];
   NSFileManager* fm = [NSFileManager defaultManager];
   NSUserDefaults* defs = [NSUserDefaults standardUserDefaults];
@@ -482,6 +485,7 @@ static Onizuka* gSharedOnizuka = nil;
         NSString* sub = [s substringWithRange:r];
         if ([sub isEqualToString:@"__APPNAME__"]) loc = _appName;
         else if ([sub isEqual:@"__VERSION__"]) loc = _appVersion;
+        else if ([sub isEqual:@"__LONG_VERSION__"]) loc = _appLongVersion;
         else loc = [self bestLocalizedString:sub];
         if (loc)
         {

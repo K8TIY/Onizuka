@@ -27,6 +27,7 @@ THE SOFTWARE.
 {
   NSString*            _appName;
   NSString*            _appVersion;
+  NSString*            _appLongVersion;
   NSMutableDictionary* _cache;
   NSArray*             _languages;
 }
